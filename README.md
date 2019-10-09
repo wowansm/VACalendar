@@ -112,6 +112,9 @@ Version 1.3
 * Localization 
 * Swift 4.2
 
+Version 1.4
+* Swift 5.0
+
 
 ## Requirements
 
