@@ -126,7 +126,7 @@ Version 1.3
 ````ruby
 use_frameworks!
 
-pod 'VACalendar', :git => 'https://github.com/wowansm/VACalendar',
+pod 'VACalendar', :git => 'https://github.com/wowansm/VACalendar'
 
 ````
 
