@@ -10,33 +10,33 @@ import UIKit
 import VACalendar
 
 final class VerticalCalendarController: UIViewController {
-    
-    @IBOutlet weak var weekDaysView: VAWeekDaysView! {
+
+	@IBOutlet weak var weekDaysView: VAWeekDaysView! {
         didSet {
             let appereance = VAWeekDaysViewAppearance(symbolsType: .short, calendar: defaultCalendar)
             weekDaysView.appearance = appereance
         }
     }
-    
-    let defaultCalendar: Calendar = {
+
+	let defaultCalendar: Calendar = {
         var calendar = Calendar.current
         calendar.firstWeekday = 2
         calendar.timeZone = TimeZone(secondsFromGMT: 0)!
         return calendar
     }()
-    
-    var calendarView: VACalendarView!
-    
-    override func viewDidLoad() {
+
+	var calendarView: VACalendarView!
+
+	override func viewDidLoad() {
         super.viewDidLoad()
 
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyy"
-        
-        let startDate = formatter.date(from: "01.01.2015")!
+
+		let startDate = formatter.date(from: "01.01.2015")!
         let endDate = formatter.date(from: "01.01.2021")!
-        
-        let calendar = VACalendar(
+
+		let calendar = VACalendar(
             startDate: startDate,
             endDate: endDate,
             calendar: defaultCalendar
@@ -56,11 +56,11 @@ final class VerticalCalendarController: UIViewController {
             ])
         view.addSubview(calendarView)
     }
-    
-    override func viewDidLayoutSubviews() {
+
+	override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        if calendarView.frame == .zero {
+
+		if calendarView.frame == .zero {
             calendarView.frame = CGRect(
                 x: 0,
                 y: weekDaysView.frame.maxY,
@@ -70,42 +70,42 @@ final class VerticalCalendarController: UIViewController {
             calendarView.setup()
         }
     }
-    
+
 }
 
 extension VerticalCalendarController: VAMonthViewAppearanceDelegate {
-    
-    func leftInset() -> CGFloat {
+
+	func leftInset() -> CGFloat {
         return 10.0
     }
-    
-    func rightInset() -> CGFloat {
+
+	func rightInset() -> CGFloat {
         return 10.0
     }
-    
-    func verticalMonthTitleFont() -> UIFont {
+
+	func verticalMonthTitleFont() -> UIFont {
         return UIFont.systemFont(ofSize: 16, weight: .semibold)
     }
-    
-    func verticalMonthTitleColor() -> UIColor {
+
+	func verticalMonthTitleColor() -> UIColor {
         return .black
     }
-    
-    func verticalCurrentMonthTitleColor() -> UIColor {
+
+	func verticalCurrentMonthTitleColor() -> UIColor {
         return .red
     }
-    
-    func verticalMonthDateFormater() -> DateFormatter {
+
+	func verticalMonthDateFormater() -> DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "LLLL"
         return dateFormatter
     }
-    
+
 }
 
 extension VerticalCalendarController: VADayViewAppearanceDelegate {
-    
-    func textColor(for state: VADayState) -> UIColor {
+
+	func textColor(for state: VADayState) -> UIColor {
         switch state {
         case .out:
             return UIColor(red: 214 / 255, green: 214 / 255, blue: 219 / 255, alpha: 1.0)
@@ -117,8 +117,8 @@ extension VerticalCalendarController: VADayViewAppearanceDelegate {
             return .black
         }
     }
-    
-    func textBackgroundColor(for state: VADayState) -> UIColor {
+
+	func textBackgroundColor(for state: VADayState) -> UIColor {
         switch state {
         case .selected:
             return .red
@@ -126,12 +126,12 @@ extension VerticalCalendarController: VADayViewAppearanceDelegate {
             return .clear
         }
     }
-    
-    func shape() -> VADayShape {
+
+	func shape() -> VADayShape {
         return .circle
     }
-    
-    func dotBottomVerticalOffset(for state: VADayState) -> CGFloat {
+
+	func dotBottomVerticalOffset(for state: VADayState) -> CGFloat {
         switch state {
         case .selected:
             return 2
@@ -139,13 +139,13 @@ extension VerticalCalendarController: VADayViewAppearanceDelegate {
             return -7
         }
     }
-    
+
 }
 
 extension VerticalCalendarController: VACalendarViewDelegate {
-    
-    func selectedDate(_ date: Date) {
+
+	func selectedDate(_ date: Date) {
         print(date)
     }
-    
+
 }

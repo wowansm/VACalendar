@@ -29,22 +29,22 @@ public protocol VACalendarViewDelegate: class {
 }
 
 public class VACalendarView: UIScrollView {
-    
-    public weak var monthDelegate: VACalendarMonthDelegate?
+
+	public weak var monthDelegate: VACalendarMonthDelegate?
     public weak var dayViewAppearanceDelegate: VADayViewAppearanceDelegate?
     public weak var monthViewAppearanceDelegate: VAMonthViewAppearanceDelegate?
     public weak var calendarDelegate: VACalendarViewDelegate?
-    
-    public var scrollDirection: VACalendarScrollDirection = .vertical
+
+	public var scrollDirection: VACalendarScrollDirection = .vertical
     // use this for vertical scroll direction
     public var monthVerticalInset: CGFloat = 20
     public var monthVerticalHeaderHeight: CGFloat = 20
-    
-    public var startDate = Date()
+
+	public var startDate = Date()
     public var showDaysOut = true
     public var selectionStyle: VASelectionStyle = .single
-    
-    private var calculatedWeekHeight: CGFloat = 100
+
+	private var calculatedWeekHeight: CGFloat = 100
     private let calendar: VACalendar
     private var monthViews = [VAMonthView]()
     private let maxNumberOfWeek = 6
@@ -61,18 +61,18 @@ public class VACalendarView: UIScrollView {
     private var currentMonth: VAMonthView? {
         return getMonthView(with: contentOffset)
     }
-    
-    public init(frame: CGRect, calendar: VACalendar) {
+
+	public init(frame: CGRect, calendar: VACalendar) {
         self.calendar = calendar
-        
-        super.init(frame: frame)
+
+		super.init(frame: frame)
     }
-    
-    public required init?(coder aDecoder: NSCoder) {
+
+	public required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // specify all properties before calling setup()
+
+	// specify all properties before calling setup()
     public func setup() {
         delegate = self
         calendar.delegate = self
@@ -81,45 +81,45 @@ public class VACalendarView: UIScrollView {
         setupMonths()
         scrollToStartDate()
     }
-    
-    public func nextMonth() {
+
+	public func nextMonth() {
         switch scrollDirection {
         case .horizontal:
             let x = contentOffset.x + frame.width
             guard x < contentSize.width else { return }
-            
-            setContentOffset(CGPoint(x: x, y: 0), animated: false)
+
+			setContentOffset(CGPoint(x: x, y: 0), animated: false)
             drawVisibleMonth(with: contentOffset)
         case .vertical: break
         }
     }
-    
-    public func previousMonth() {
+
+	public func previousMonth() {
         switch scrollDirection {
         case .horizontal:
             let x = contentOffset.x - frame.width
             guard x >= 0 else { return }
-            
-            setContentOffset(CGPoint(x: x, y: 0), animated: false)
+
+			setContentOffset(CGPoint(x: x, y: 0), animated: false)
             drawVisibleMonth(with: contentOffset)
         case .vertical: break
         }
     }
-    
-    public func selectDates(_ dates: [Date]) {
+
+	public func selectDates(_ dates: [Date]) {
         calendar.deselectAll()
         calendar.selectDates(dates)
     }
-    
-    public func setAvailableDates(_ availability: DaysAvailability) {
+
+	public func setAvailableDates(_ availability: DaysAvailability) {
         calendar.setDaysAvailability(availability)
     }
-    
-    public func setSupplementaries(_ data: [(Date, [VADaySupplementary])]) {
+
+	public func setSupplementaries(_ data: [(Date, [VADaySupplementary])]) {
         calendar.setSupplementaries(data)
     }
-    
-    public func changeViewType() {
+
+	public func changeViewType() {
         switch scrollDirection {
         case .horizontal:
             viewType = viewType == .month ? .week : .month
@@ -129,21 +129,21 @@ public class VACalendarView: UIScrollView {
         case .vertical: break
         }
     }
-    
-    // MARK: Private Methods.
-    
-    private func directionSetup() {
+
+	// MARK: Private Methods.
+
+	private func directionSetup() {
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false
-        
-        switch scrollDirection {
+
+		switch scrollDirection {
         case .horizontal:
             isPagingEnabled = true
         case .vertical: break
         }
     }
-    
-    private func calculateContentSize() {
+
+	private func calculateContentSize() {
         switch scrollDirection {
         case .horizontal:
             switch viewType {
@@ -164,17 +164,19 @@ public class VACalendarView: UIScrollView {
             contentSize.height = monthsHeight
         }
     }
-    
-    private func setupMonths() {
+
+	private func setupMonths() {
         monthViews = calendar.months.map {
             VAMonthView(month: $0, showDaysOut: showDaysOut, weekHeight: weekHeight, viewType: viewType)
         }
-        
-        monthViews.forEach { addSubview($0) }
+
+		monthViews.forEach {
+			addSubview($0)
+		}
         drawMonths()
     }
-    
-    private func drawMonths() {
+
+	private func drawMonths() {
         monthViews.forEach { $0.clean() }
         monthViews.enumerated().forEach { index, monthView in
             switch scrollDirection {
@@ -195,23 +197,23 @@ public class VACalendarView: UIScrollView {
             }
         }
     }
-    
-    private func scrollToStartDate() {
+
+	private func scrollToStartDate() {
         let startMonth = monthViews.first(where: { $0.month.dateInThisMonth(startDate) })
         var offset: CGPoint = startMonth?.frame.origin ?? .zero
-        
-        setContentOffset(offset, animated: false)
+
+		setContentOffset(offset, animated: false)
         drawVisibleMonth(with: contentOffset)
-        
-        if viewType == .week {
+
+		if viewType == .week {
             let weekOffset = startMonth?.week(with: startDate)?.frame.origin.x ?? 0
             let inset = startMonth?.monthViewAppearanceDelegate?.leftInset?() ?? 0
             offset.x += weekOffset - inset
             setContentOffset(offset, animated: false)
         }
     }
-    
-    private func getMonthView(with offset: CGPoint) -> VAMonthView? {
+
+	private func getMonthView(with offset: CGPoint) -> VAMonthView? {
         switch scrollDirection {
         case .horizontal:
             switch viewType {
@@ -225,14 +227,14 @@ public class VACalendarView: UIScrollView {
             return monthViews.first(where: { $0.frame.midY >= offset.y })
         }
     }
-    
-    private func drawVisibleMonth(with offset: CGPoint) {
+
+	private func drawVisibleMonth(with offset: CGPoint) {
         switch scrollDirection {
         case .horizontal:
             let first: ((offset: Int, element: VAMonthView)) -> Bool = { $0.element.frame.midX >= offset.x }
             guard let currentIndex = monthViews.enumerated().first(where: first)?.offset else { return }
-            
-            monthViews.enumerated().forEach { index, month in
+
+			monthViews.enumerated().forEach { index, month in
                 if index == currentIndex || index + 1 == currentIndex || index - 1 == currentIndex {
                     month.delegate = self
                     month.setupWeeksView(with: viewType)
@@ -240,12 +242,12 @@ public class VACalendarView: UIScrollView {
                     month.clean()
                 }
             }
-            
-        case .vertical:
+
+		case .vertical:
             let first: ((offset: Int, element: VAMonthView)) -> Bool = { $0.element.frame.minY >= offset.y }
             guard let currentIndex = monthViews.enumerated().first(where: first)?.offset else { return }
-            
-            monthViews.enumerated().forEach { index, month in
+
+			monthViews.enumerated().forEach { index, month in
                 if index >= currentIndex - 1 && index <= currentIndex + 1 {
                     month.delegate = self
                     month.setupWeeksView(with: viewType)
@@ -255,43 +257,43 @@ public class VACalendarView: UIScrollView {
             }
         }
     }
-    
+
 }
 
 extension VACalendarView: UIScrollViewDelegate {
-    
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+	public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let monthView = getMonthView(with: scrollView.contentOffset) else { return }
-        
-        monthDelegate?.monthDidChange(monthView.month.date)
+
+		monthDelegate?.monthDidChange(monthView.month.date)
         drawVisibleMonth(with: scrollView.contentOffset)
     }
-    
+
 }
 
 extension VACalendarView: VACalendarDelegate {
-    
-    func selectedDaysDidUpdate(_ days: [VADay]) {
+
+	func selectedDaysDidUpdate(_ days: [VADay]) {
         let dates = days.map { $0.date }
         calendarDelegate?.selectedDates?(dates)
     }
-    
+
 }
 
 extension VACalendarView: VAMonthViewDelegate {
-    
-    func dayStateChanged(_ day: VADay, in month: VAMonth) {
+
+	func dayStateChanged(_ day: VADay, in month: VAMonth) {
         switch selectionStyle {
         case .single:
             guard day.state == .available else { return }
-            
-            calendar.deselectAll()
+
+			calendar.deselectAll()
             calendar.setDaySelectionState(day, state: .selected)
             calendarDelegate?.selectedDate?(day.date)
-            
-        case .multi:
+
+		case .multi:
             calendar.setDaySelectionState(day, state: day.reverseSelectionState)
         }
     }
-    
+
 }

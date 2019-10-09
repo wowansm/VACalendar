@@ -22,87 +22,87 @@ public protocol VAMonthViewAppearanceDelegate: class {
 }
 
 class VAMonthView: UIView {
-    
+
     var numberOfWeeks: Int {
         return month.numberOfWeeks
     }
-    
+
     var isDrawn: Bool {
         return !weekViews.isEmpty
     }
-    
+
     var scrollDirection: VACalendarScrollDirection {
         return (superview as? VACalendarView)?.scrollDirection ?? .horizontal
     }
-    
+
     var monthVerticalHeaderHeight: CGFloat {
         return (superview as? VACalendarView)?.monthVerticalHeaderHeight ?? 0.0
     }
-    
+
     var superviewWidth: CGFloat {
         return superview?.frame.width ?? 0
     }
-    
-    weak var monthViewAppearanceDelegate: VAMonthViewAppearanceDelegate? {
+
+    var monthViewAppearanceDelegate: VAMonthViewAppearanceDelegate? {
         return (superview as? VACalendarView)?.monthViewAppearanceDelegate
     }
-    
-    weak var dayViewAppearanceDelegate: VADayViewAppearanceDelegate? {
+
+    var dayViewAppearanceDelegate: VADayViewAppearanceDelegate? {
         return (superview as? VACalendarView)?.dayViewAppearanceDelegate
     }
-    
+
     weak var delegate: VAMonthViewDelegate?
 
     let month: VAMonth
-    
+
     private let showDaysOut: Bool
     private var monthLabel: UILabel?
     private var weekViews = [VAWeekView]()
     private let weekHeight: CGFloat
     private var viewType: VACalendarViewType
-    
+
     init(month: VAMonth, showDaysOut: Bool, weekHeight: CGFloat, viewType: VACalendarViewType) {
         self.month = month
         self.showDaysOut = showDaysOut
         self.weekHeight = weekHeight
         self.viewType = viewType
-        
+
         super.init(frame: .zero)
-        
+
         backgroundColor = .clear
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setupWeeksView(with type: VACalendarViewType) {
         guard isDrawn == false else { return }
-    
+
         self.viewType = type
-        
+
         if scrollDirection == .vertical {
             setupMonthLabel()
         }
 
         self.weekViews = []
 
-        month.weeks.enumerated().forEach { index, week in
+        month.weeks.enumerated().forEach { _, week in
             let weekView = VAWeekView(week: week, showDaysOut: showDaysOut)
             weekView.delegate = self
             self.weekViews.append(weekView)
             self.addSubview(weekView)
         }
-        
+
         draw()
     }
-    
+
     func clean() {
         monthLabel = nil
         weekViews = []
         subviews.forEach { $0.removeFromSuperview() }
     }
-    
+
     func week(with date: Date) -> VAWeekView? {
         return weekViews.first(where: { $0.contains(date: date) })
     }
@@ -112,11 +112,11 @@ class VAMonthView: UIView {
         let rightInset = monthViewAppearanceDelegate?.rightInset?() ?? 0
         let initialOffsetY = self.monthLabel?.frame.maxY ?? 0
         let weekViewWidth = self.frame.width - (leftInset + rightInset)
-        
+
         var x: CGFloat = leftInset
         var y: CGFloat = initialOffsetY
 
-        weekViews.enumerated().forEach { index, week in
+        weekViews.enumerated().forEach { _, week in
             switch viewType {
             case .month:
                 week.frame = CGRect(
@@ -126,7 +126,7 @@ class VAMonthView: UIView {
                     height: self.weekHeight
                 )
                 y = week.frame.maxY
-                
+
             case .week:
                 let width = self.superviewWidth - (leftInset + rightInset)
 
@@ -141,11 +141,11 @@ class VAMonthView: UIView {
             week.setupDays()
         }
     }
-    
+
     private func setupMonthLabel() {
         let textColor = month.isCurrent ? monthViewAppearanceDelegate?.verticalCurrentMonthTitleColor?() :
             monthViewAppearanceDelegate?.verticalMonthTitleColor?()
-        
+
         monthLabel = UILabel()
         monthLabel?.text = VAFormatters.monthFormatter.string(from: month.date)
         monthLabel?.textColor = textColor ?? monthLabel?.textColor
@@ -154,13 +154,13 @@ class VAMonthView: UIView {
         monthLabel?.center.x = center.x
         addSubview(monthLabel ?? UIView())
     }
-    
+
 }
 
 extension VAMonthView: VAWeekViewDelegate {
-    
+
     func dayStateChanged(_ day: VADay, in week: VAWeek) {
         delegate?.dayStateChanged(day, in: month)
     }
-    
+
 }

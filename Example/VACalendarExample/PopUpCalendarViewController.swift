@@ -12,14 +12,14 @@ class PopUpCalendarViewController: UIViewController {
 
     @IBOutlet weak var dayLabel: UILabel!
     @IBOutlet weak var showCalendarButton: UIButton!
-    
-    private let formatter: DateFormatter = {
+
+	private let formatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "E dd LLLL"
         return formatter
     }()
-    
-    private lazy var calendarPopup: CalendarPopUpView = {
+
+	private lazy var calendarPopup: CalendarPopUpView = {
         let frame = CGRect(
             x: 15,
             y: dayLabel.frame.maxY + 20,
@@ -38,8 +38,8 @@ class PopUpCalendarViewController: UIViewController {
 
         return calendar
     }()
-    
-    override func viewDidLoad() {
+
+	override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = UIColor(
@@ -53,16 +53,16 @@ class PopUpCalendarViewController: UIViewController {
 
     @IBAction func didTapSelectDay(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
-        
-        if sender.isSelected {
+
+		if sender.isSelected {
             view.addSubview(calendarPopup)
         } else {
             calendarPopup.removeFromSuperview()
         }
     }
-    
-    private func setSelectedDate(_ date: Date) {
+
+	private func setSelectedDate(_ date: Date) {
         dayLabel.text = formatter.string(from: date)
     }
-    
+
 }

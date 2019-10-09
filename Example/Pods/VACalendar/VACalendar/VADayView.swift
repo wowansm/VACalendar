@@ -27,14 +27,14 @@ protocol VADayViewDelegate: class {
 }
 
 class VADayView: UIView {
-    
+
     var day: VADay
     weak var delegate: VADayViewDelegate?
-    
-    weak var dayViewAppearanceDelegate: VADayViewAppearanceDelegate? {
+
+    var dayViewAppearanceDelegate: VADayViewAppearanceDelegate? {
         return (superview as? VAWeekView)?.dayViewAppearanceDelegate
     }
-    
+
     private var dotStackView: UIStackView {
         let stack = UIStackView()
         stack.distribution = .fillEqually
@@ -42,36 +42,36 @@ class VADayView: UIView {
         stack.spacing = dotSpacing
         return stack
     }
-    
+
     private let dotSpacing: CGFloat = 5
     private let dotSize: CGFloat = 5
     private var supplementaryViews = [UIView]()
     private let dateLabel = UILabel()
-    
+
     init(day: VADay) {
         self.day = day
         super.init(frame: .zero)
-        
+
         self.day.stateChanged = { [weak self] state in
             self?.setState(state)
         }
-        
+
         self.day.supplementariesDidUpdate = { [weak self] in
             self?.updateSupplementaryViews()
         }
-        
+
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSelect))
         addGestureRecognizer(tapGesture)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setupDay() {
         let shortestSide: CGFloat = (frame.width < frame.height ? frame.width : frame.height)
         let side: CGFloat = shortestSide * (dayViewAppearanceDelegate?.selectedArea?() ?? 0.8)
-        
+
         dateLabel.font = dayViewAppearanceDelegate?.font?(for: day.state) ?? dateLabel.font
         dateLabel.text = VAFormatters.dayFormatter.string(from: day.date)
         dateLabel.textAlignment = .center
@@ -87,31 +87,31 @@ class VADayView: UIView {
         addSubview(dateLabel)
         updateSupplementaryViews()
     }
-    
+
     @objc
     private func didTapSelect() {
         guard day.state != .out && day.state != .unavailable else { return }
         delegate?.dayStateChanged(day)
     }
-    
+
     private func setState(_ state: VADayState) {
         backgroundColor = dayViewAppearanceDelegate?.backgroundColor?(for: state) ?? backgroundColor
         layer.borderColor = dayViewAppearanceDelegate?.borderColor?(for: state).cgColor ?? layer.borderColor
         layer.borderWidth = dayViewAppearanceDelegate?.borderWidth?(for: state) ?? dateLabel.layer.borderWidth
         dateLabel.textColor = dayViewAppearanceDelegate?.textColor?(for: state) ?? dateLabel.textColor
         dateLabel.backgroundColor = dayViewAppearanceDelegate?.textBackgroundColor?(for: state) ?? dateLabel.backgroundColor
-        
+
         if dayViewAppearanceDelegate?.shape?() == .circle && state == .selected {
             dateLabel.clipsToBounds = true
             dateLabel.layer.cornerRadius = dateLabel.frame.height / 2
         }
-        
+
         updateSupplementaryViews()
     }
-    
+
     private func updateSupplementaryViews() {
         removeAllSupplementaries()
-        
+
         day.supplementaries.forEach { supplementary in
             switch supplementary {
             case .bottomDots(let colors):
@@ -123,7 +123,7 @@ class VADayView: UIView {
                 }
                 let spaceOffset = CGFloat(colors.count - 1) * dotSpacing
                 let stackWidth = CGFloat(colors.count) * dotSpacing + spaceOffset
-                
+
                 let verticalOffset = dayViewAppearanceDelegate?.dotBottomVerticalOffset?(for: day.state) ?? 2
                 stack.frame = CGRect(x: 0, y: dateLabel.frame.maxY + verticalOffset, width: stackWidth, height: dotSize)
                 stack.center.x = dateLabel.center.x
@@ -132,10 +132,10 @@ class VADayView: UIView {
             }
         }
     }
-    
+
     private func removeAllSupplementaries() {
         supplementaryViews.forEach { $0.removeFromSuperview() }
         supplementaryViews = []
     }
-    
+
 }

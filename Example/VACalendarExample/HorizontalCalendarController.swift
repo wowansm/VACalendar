@@ -10,13 +10,13 @@ import UIKit
 import VACalendar
 
 final class HorizontalCalendarController: UIViewController {
-    
-    @IBOutlet weak var monthHeaderView: VAMonthHeaderView! {
+
+	@IBOutlet weak var monthHeaderView: VAMonthHeaderView! {
         didSet {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "LLLL"
-            
-            let appereance = VAMonthHeaderViewAppearance(
+
+			let appereance = VAMonthHeaderViewAppearance(
                 previousButtonImage: #imageLiteral(resourceName: "previous"),
                 nextButtonImage: #imageLiteral(resourceName: "next"),
                 dateFormatter: dateFormatter
@@ -25,27 +25,27 @@ final class HorizontalCalendarController: UIViewController {
             monthHeaderView.appearance = appereance
         }
     }
-    
-    @IBOutlet weak var weekDaysView: VAWeekDaysView! {
+
+	@IBOutlet weak var weekDaysView: VAWeekDaysView! {
         didSet {
             let appereance = VAWeekDaysViewAppearance(symbolsType: .veryShort, calendar: defaultCalendar)
             weekDaysView.appearance = appereance
         }
     }
-    
-    let defaultCalendar: Calendar = {
+
+	let defaultCalendar: Calendar = {
         var calendar = Calendar.current
         calendar.firstWeekday = 1
         calendar.timeZone = TimeZone(secondsFromGMT: 0)!
         return calendar
     }()
-    
-    var calendarView: VACalendarView!
-    
-    override func viewDidLoad() {
+
+	var calendarView: VACalendarView!
+
+	override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let calendar = VACalendar(calendar: defaultCalendar)
+
+		let calendar = VACalendar(calendar: defaultCalendar)
         calendarView = VACalendarView(frame: .zero, calendar: calendar)
         calendarView.showDaysOut = true
         calendarView.selectionStyle = .multi
@@ -62,11 +62,11 @@ final class HorizontalCalendarController: UIViewController {
             ])
         view.addSubview(calendarView)
     }
-    
-    override func viewDidLayoutSubviews() {
+
+	override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        if calendarView.frame == .zero {
+
+		if calendarView.frame == .zero {
             calendarView.frame = CGRect(
                 x: 0,
                 y: weekDaysView.frame.maxY,
@@ -76,52 +76,52 @@ final class HorizontalCalendarController: UIViewController {
             calendarView.setup()
         }
     }
-    
-    @IBAction func changeMode(_ sender: Any) {
+
+	@IBAction func changeMode(_ sender: Any) {
         calendarView.changeViewType()
     }
-    
+
 }
 
 extension HorizontalCalendarController: VAMonthHeaderViewDelegate {
-    
-    func didTapNextMonth() {
+
+	func didTapNextMonth() {
         calendarView.nextMonth()
     }
-    
-    func didTapPreviousMonth() {
+
+	func didTapPreviousMonth() {
         calendarView.previousMonth()
     }
-    
+
 }
 
 extension HorizontalCalendarController: VAMonthViewAppearanceDelegate {
-    
-    func leftInset() -> CGFloat {
+
+	func leftInset() -> CGFloat {
         return 10.0
     }
-    
-    func rightInset() -> CGFloat {
+
+	func rightInset() -> CGFloat {
         return 10.0
     }
-    
-    func verticalMonthTitleFont() -> UIFont {
+
+	func verticalMonthTitleFont() -> UIFont {
         return UIFont.systemFont(ofSize: 16, weight: .semibold)
     }
-    
-    func verticalMonthTitleColor() -> UIColor {
+
+	func verticalMonthTitleColor() -> UIColor {
         return .black
     }
-    
-    func verticalCurrentMonthTitleColor() -> UIColor {
+
+	func verticalCurrentMonthTitleColor() -> UIColor {
         return .red
     }
-    
+
 }
 
 extension HorizontalCalendarController: VADayViewAppearanceDelegate {
-    
-    func textColor(for state: VADayState) -> UIColor {
+
+	func textColor(for state: VADayState) -> UIColor {
         switch state {
         case .out:
             return UIColor(red: 214 / 255, green: 214 / 255, blue: 219 / 255, alpha: 1.0)
@@ -133,8 +133,8 @@ extension HorizontalCalendarController: VADayViewAppearanceDelegate {
             return .black
         }
     }
-    
-    func textBackgroundColor(for state: VADayState) -> UIColor {
+
+	func textBackgroundColor(for state: VADayState) -> UIColor {
         switch state {
         case .selected:
             return .red
@@ -142,12 +142,12 @@ extension HorizontalCalendarController: VADayViewAppearanceDelegate {
             return .clear
         }
     }
-    
-    func shape() -> VADayShape {
+
+	func shape() -> VADayShape {
         return .circle
     }
-    
-    func dotBottomVerticalOffset(for state: VADayState) -> CGFloat {
+
+	func dotBottomVerticalOffset(for state: VADayState) -> CGFloat {
         switch state {
         case .selected:
             return 2
@@ -155,15 +155,14 @@ extension HorizontalCalendarController: VADayViewAppearanceDelegate {
             return -7
         }
     }
-    
+
 }
 
 extension HorizontalCalendarController: VACalendarViewDelegate {
-    
-    func selectedDates(_ dates: [Date]) {
+
+	func selectedDates(_ dates: [Date]) {
         calendarView.startDate = dates.last ?? Date()
         print(dates)
     }
-    
-}
 
+}

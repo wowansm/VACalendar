@@ -9,17 +9,17 @@
 import Foundation
 
 struct VAFormatters {
-    
-    static let dayFormatter: DateFormatter = {
+
+	static let dayFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "d"
         return formatter
     }()
-    
-    static let monthFormatter: DateFormatter = {
+
+	static let monthFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "LLLL"
         return formatter
     }()
-    
+
 }
