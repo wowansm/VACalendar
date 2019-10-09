@@ -5,7 +5,7 @@
 <img src="Screenshots/horizontal_calendar.gif" width="30%" height="auto"> <img src="Screenshots/vertical_calendar.gif" width="30%" height="auto" hspace="20">  <img src="Screenshots/pop_up_calendar.gif" width="30%" height="auto">
 </p>
 
-## About ![Swift 4.2](https://img.shields.io/badge/Swift-4.2-orange.svg)
+## About ![Swift 5.0](https://img.shields.io/badge/Swift-5.0-orange.svg)
 
 The calendar with support for:
 
@@ -115,8 +115,8 @@ Version 1.3
 
 ## Requirements
 
-* Swift 4.0
-* Xcode 9
+* Swift 5.0
+* Xcode 11
 * iOS 10.0+
 
 ## Installation
